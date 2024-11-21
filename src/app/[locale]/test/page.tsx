@@ -1,29 +1,36 @@
-import { useLocale, useTranslations } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-const TestPage = () => {
-  const locale = useLocale();
-  const t = useTranslations('TestPage'); // Подключаем переводы из TestPage
+type ITestPageProps = {
+  params: { locale: string }; // Локаль, переданная через маршрут
+};
+
+export async function generateMetadata({ params }: ITestPageProps) {
+  const t = await getTranslations({
+    locale: params.locale, // Указанная локаль
+    namespace: 'TestPage', // Пространство имён для переводов
+  });
+
+  return {
+    title: t('meta_title'), // Загружаем заголовок из переводов
+    description: t('meta_description'), // Загружаем описание из переводов
+  };
+}
+
+export default async function TestPage({ params }: ITestPageProps) {
+  setRequestLocale(params.locale); // Устанавливаем локаль для текущего запроса
+  const t = await getTranslations({
+    locale: params.locale, // Указанная локаль
+    namespace: 'TestPage', // Пространство имён для переводов
+  });
 
   return (
     <div>
       <h1>{t('meta_title')}</h1>
+      {' '}
+      {/* Заголовок страницы */}
       <p>{t('meta_description')}</p>
+      {' '}
+      {/* Описание страницы */}
     </div>
   );
-};
-
-export default TestPage;
-
-/* const NewPage = () => {
-  // Используем i18n для загрузки переводов
-  const t = useTranslations('TestPage');
-
-  return (
-    <div>
-      <h1>{t('title')}</h1>
-      <p>{t('description')}</p>
-    </div>
-  );
-};
-
-export default NewPage; */
+}
