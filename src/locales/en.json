@@ -1,4 +1,9 @@
 {
+  "TestPage": {
+    "meta_title": "Welcome to the New Page",
+    "meta_description": "This is a new page in the project."
+  },
+
   "RootLayout": {
     "home_link": "Home",
     "about_link": "About",
